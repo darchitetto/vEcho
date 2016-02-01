@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
     var response = {
                         "version": "1.0",
                         "response": {
