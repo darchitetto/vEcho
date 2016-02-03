@@ -10,6 +10,9 @@ app.use(bodyParser.json())
 
 app.use(function (req, res) {
 	var response = routeIntent(req.body.request);
+	console.log("req.body: " + req.body)
+	console.log("req.body.requesty: " + req.body.request)
+
 	response.then (function(result, err){
 		console.log (result);
 		return res.send(result);
