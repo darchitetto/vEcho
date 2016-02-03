@@ -64,14 +64,14 @@ function createAssetDetailsResponse(assetDetails, assetType){
 	var attr = assetDetails.Attributes;
 
 	var details = {
-		'number': attr.Number.value,
+		'number': 'none', // attr.Number.value,
 		'name': attr.Name.value,
 		'description': attr.Description.value,
-		'owner': attr["Owners.Name"].value[0],
-		'estimate': attr.Estimate.value,
-		'priority': attr["Priority.Name"].value,
-		'project': attr["Scope.Name"].value,
-		'status': attr["Status.Name"].value
+		'owner': 'none',//attr["Owners.Name"].value[0],
+		'estimate': 'none',//attr.Estimate.value,
+		'priority': 'none',//attr["Priority.Name"].value,
+		'project': 'none',//attr["Scope.Name"].value,
+		'status': 'none',//attr["Status.Name"].value
 	}
 
 	var sentence = assetType + " " + details.number + " is named " + details.name + " and has a description of " + details.description + ".";
