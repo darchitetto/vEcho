@@ -65,8 +65,8 @@ function createAssetDetailsResponse(assetDetails, assetType){
 
 	var details = {
 		'number': 'none', // attr.Number.value,
-		'name': attr.Name.value,
-		'description': attr.Description.value,
+		'name': 'none',//attr.Name.value,
+		'description': 'none',//attr.Description.value,
 		'owner': 'none',//attr["Owners.Name"].value[0],
 		'estimate': 'none',//attr.Estimate.value,
 		'priority': 'none',//attr["Priority.Name"].value,
