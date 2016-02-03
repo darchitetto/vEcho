@@ -9,7 +9,8 @@ var app = express();
 app.use(bodyParser.json())
 
 app.use(function (req, res) {
-	if (!req.body.request.type == 'IntentRequest')
+	console.log('BODY!!!!', req.body);
+	if (req.body.request.type !== 'IntentRequest')
 		return res.send();
 	var response = routeIntent(req.body.request);
 	response.then (function(result, err){
@@ -23,7 +24,6 @@ app.listen(port, function () {
 });
 
 function routeIntent(request){
-	console.log('REQUEST:::', request)
 	var intent = request.intent == undefined ? "" : request.intent.name;
 	var assetType = request.intent.slots.Asset == undefined ? "" : request.intent.slots.Asset.value;
 	var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
