@@ -31,7 +31,7 @@ function routeIntent(request){
 	switch(intent) {
 		case "Tell":{
 			title = "Version One Asset Details";
-			shouldEndSession = true;
+			shouldEndSession = false;
 			return getAssetDetails(assetType, assetId)
 					.then(function(res,err){
 						sentence = createAssetDetailsResponse(JSON.parse(res.text),assetType);
