@@ -18,6 +18,10 @@
   "homepage": "https://github.com/darchitetto/vEcho",
   "dependencies": {
     "body-parser": "^1.14.2",
-    "express": "^4.13.4"
+    "devtool": "^1.7.6",
+    "express": "^4.13.4",
+    "promise": "^7.1.1",
+    "superagent": "^1.7.2",
+    "superagent-promise": "^1.1.0"
   }
 }
