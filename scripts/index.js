@@ -35,7 +35,8 @@ function routeIntent(request){
 			shouldEndSession = true;
 			return getAssetDetails(assetType, assetId)
 					.then(function(res,err){
-					sentence = createAssetDetailsResponse(JSON.parse(res.text),assetType);
+						console.log('res', res);
+						sentence = createAssetDetailsResponse(JSON.parse(res.text),assetType);
 						return createResponse(title, sentence, shouldEndSession)
 				})
 		}
@@ -63,6 +64,7 @@ function getAssetDetails(assetType, assetId){
 }
 
 function createAssetDetailsResponse(assetDetails, assetType){
+	console.log('assetDetails', assetDetails)
 	var attr = assetDetails.Attributes;
 
 	var details = {
