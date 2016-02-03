@@ -11,7 +11,6 @@ app.use(bodyParser.json())
 app.use(function (req, res) {
 	var response = routeIntent(req.body.request);
 	response.then (function(result, err){
-		console.log (result);
 		return res.send(result);
 	});
 });
@@ -34,7 +33,6 @@ function routeIntent(request){
 			shouldEndSession = true;
 			return getAssetDetails(assetType, assetId)
 					.then(function(res,err){
-						console.log('res', res);
 						sentence = createAssetDetailsResponse(JSON.parse(res.text),assetType);
 						return createResponse(title, sentence, shouldEndSession)
 				})
@@ -55,7 +53,7 @@ function getAssetDetails(assetType, assetId){
 	var url  = prefix + "/rest-1.v1/Data/" + assetType + '/' + assetId
 
 	return agent('GET', url)
-		.set('Content-Type', 'application/json')
+		.set('Accept', 'application/json')
 		.query({sel: 'Name,Number,Scope.Name,Description,Status.Name,Priority.Name,Owners.Name,Estimate'})
 		.end();
 
