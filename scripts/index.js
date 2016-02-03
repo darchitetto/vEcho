@@ -10,11 +10,6 @@ app.use(bodyParser.json())
 
 app.use(function (req, res) {
 	var response = routeIntent(req.body.request);
-	console.log("req.body: ", req.body)
-	console.log("req.body.request: ", req.body.request)
-	console.log("req.body.intent: ", req.body.request.intent)
-
-
 	response.then (function(result, err){
 		console.log (result);
 		return res.send(result);
@@ -40,7 +35,7 @@ function routeIntent(request){
 			shouldEndSession = true;
 			return getAssetDetails(assetType, assetId)
 					.then(function(res,err){
-						sentence = createAssetDetailsResponse(JSON.parse(res.text),assetType);
+					sentence = createAssetDetailsResponse(JSON.parse(res.text),assetType);
 						return createResponse(title, sentence, shouldEndSession)
 				})
 		}
@@ -56,10 +51,13 @@ function routeIntent(request){
 }
 
 function getAssetDetails(assetType, assetId){
-	var url  = "http://builds.versionone.net/PR_16.0.2.11614/rest-1.v1/Data/" + assetType + '/' + assetId + '?sel=Name,Number,Scope.Name,Description,Status.Name,Priority.Name,Owners.Name,Estimate'
+	var prefix = 'http://walker.eastus.cloudapp.azure.com/VersionOne'; //  'http://builds.versionone.net/PR_16.0.2.11614'
+	var url  = prefix + "/rest-1.v1/Data/" + assetType + '/' + assetId
+	console.log("url", url)
 
 	return agent('GET', url)
 		.set('Accept', 'application/json')
+		.query({sel: 'Name,Number,Scope.Name,Description,Status.Name,Priority.Name,Owners.Name,Estimate'})
 		.end();
 
 }
