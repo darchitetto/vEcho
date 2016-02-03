@@ -21,6 +21,7 @@ app.listen(port, function () {
 });
 
 function routeIntent(request){
+	console.log('REQUEST:::', request)
 	var intent = request.intent.name == undefined ? "" : request.intent.name;
 	var assetType = request.intent.slots.Asset.name == undefined ? "" : request.intent.slots.Asset.value;
 	var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
