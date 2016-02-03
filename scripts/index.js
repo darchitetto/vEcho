@@ -9,6 +9,8 @@ var app = express();
 app.use(bodyParser.json())
 
 app.use(function (req, res) {
+	if (!req.body.request.type == 'IntentRequest')
+		return res.send();
 	var response = routeIntent(req.body.request);
 	response.then (function(result, err){
 		return res.send(result);
