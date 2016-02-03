@@ -19,7 +19,6 @@ app.use(function (req, res) {
 var port = process.env.PORT || 3000;
 
 app.listen(port, function () {
-	console.log('Example app listening on port 3000!');
 });
 
 function routeIntent(request){
@@ -54,10 +53,9 @@ function routeIntent(request){
 function getAssetDetails(assetType, assetId){
 	var prefix = 'http://walker.eastus.cloudapp.azure.com/VersionOne'; //  'http://builds.versionone.net/PR_16.0.2.11614'
 	var url  = prefix + "/rest-1.v1/Data/" + assetType + '/' + assetId
-	console.log("url", url)
 
 	return agent('GET', url)
-		.set('Accept', 'application/json')
+		.set('Content-Type', 'application/json')
 		.query({sel: 'Name,Number,Scope.Name,Description,Status.Name,Priority.Name,Owners.Name,Estimate'})
 		.end();
 
@@ -83,7 +81,6 @@ function createAssetDetailsResponse(assetDetails, assetType){
 	sentence += " and has an estimate of " + details.estimate;
 	sentence += " This " + assetType + "is of " + details.priority + " and has a status of " + details.status;
 	sentence += " It is being worked in the " + details.project + " project.";
- 	console.log(sentence);
 	return sentence;
 }
 
