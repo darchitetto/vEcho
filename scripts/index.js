@@ -26,13 +26,18 @@ app.listen(port, function () {
 });
 
 function routeIntent(request){
+	var assetType, sentence, title, shouldEndSession;
+
 	var intent = request.intent == undefined ? "" : request.intent.name;
-	var assetType = request.intent.slots.Asset == undefined ? "" : request.intent.slots.Asset.value;
-	var sentence, title, shouldEndSession;
-	assetType = assetTypeMapper(assetType);
+
+	if(request.intent.slots) {
+		assetType = request.intent.slots.Asset == undefined ? "" : request.intent.slots.Asset.value;
+	}
+
 
 	switch(intent) {
 		case "TellIntent":{
+			assetType = assetTypeMapper(assetType);
 			var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
 			var assetNumber = createAssetNumber(assetType, assetId);
 
@@ -48,13 +53,13 @@ function routeIntent(request){
 		}
 		break;
 		case "CreateIntent":{
+			assetType = assetTypeMapper(assetType);
 			title = "Version One Create a new " + assetType;
-
-			var title = request.intent.slots.Title.value == undefined ? "" : request.intent.slots.Title.value;
-			var descrition = request.intent.slots.Description.value == undefined ? "" : request.intent.slots.Description.value;
+			var assetTitle = request.intent.slots.Title.value == undefined ? "" : request.intent.slots.Title.value;
+			var description = request.intent.slots.Description.value == undefined ? "" : request.intent.slots.Description.value;
 			var estimate = request.intent.slots.Estimate.value == undefined ? "" : request.intent.slots.Estimate.value;
 
-			return createAsset(assetType,title, descrition,estimate)
+			return createAsset(assetType,assetTitle, description,estimate)
 				.then(function(res){
 					sentence = createAssetResponse(res.statusCode, assetType, title);
 					return createEchoResponse(title, sentence, shouldEndSession);
@@ -65,6 +70,7 @@ function routeIntent(request){
 		}
 		break;
 		case "CloseIntent": {
+			assetType = assetTypeMapper(assetType);
 			title = "Version One Close " + assetType;
 			var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
 
@@ -73,6 +79,22 @@ function routeIntent(request){
 					sentence = closeAssetResponse(res.statusCode, assetType, assetId);
 					return createEchoResponse(title, sentence, shouldEndSession);
 				});
+		}
+		break;
+		case "TeamroomIntent":{
+			title = "Version One teamroom details ";
+			sentence = createTeamroomResponse();
+			return new Promise(function (resolve, reject) {
+				resolve(createEchoResponse(title, sentence, shouldEndSession))
+			});
+		}
+		break;
+		case "CompanyIntent":{
+			title = "Version One Company details ";
+			sentence = createCompanyResponse();
+			return new Promise(function (resolve, reject) {
+				resolve(createEchoResponse(title, sentence, shouldEndSession))
+			});
 		}
 		break;
 		default: {
@@ -173,6 +195,14 @@ function closeAssetResponse(statusCode, assetType, assetId){
 	}
 
 	return 'We are sorry, closing the ' + assetType + '  was not successful  .   Please try again.'
+}
+
+function createTeamroomResponse(){
+	return "Team Imperial Force has been very busy  .  It has an average velocity of 9 and has planned 52 points for the next iteration.  Andre and Willy have been kicking ass.  "
+}
+
+function createCompanyResponse(){
+	return "Version One is a super awesome company that develops End-to-end enterprise agile software solutions for helping organizations scale agile faster, easier, and smarter."
 }
 
 function createEchoResponse(title, sentence, shouldEndsession){
