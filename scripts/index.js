@@ -34,12 +34,13 @@ function routeIntent(request){
 	switch(intent) {
 		case "TellIntent":{
 			var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
+			var assetNumber = createAssetNumber(assetType, assetId);
 
 			title = 'Version One ' + assetType + '  details';
 			shouldEndSession = true;
-			return getAssetDetails(assetType, assetId)
+			return getAssetDetails(assetType, assetNumber)
 					.then(function(res){
-						sentence = assetDetailsResponse(JSON.parse(res.text),assetType);
+						sentence = assetDetailsResponse(JSON.parse(res.text),assetType,assetNumber);
 						return createEchoResponse(title, sentence, shouldEndSession)
 				}).catch(function(err){
 					console.log(err);
@@ -65,8 +66,8 @@ function routeIntent(request){
 		break;
 		case "CloseIntent": {
 			title = "Version One Close " + assetType;
-
 			var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
+
 			return closeAsset(assetType, assetId)
 				.then(function(res){
 					sentence = closeAssetResponse(res.statusCode, assetType, assetId);
@@ -80,16 +81,15 @@ function routeIntent(request){
 	}
 }
 
-function getAssetDetails(assetType, assetId){
+function getAssetDetails(assetType, assetNumber){
 	var attributeSelector = {
 		Story : 'Name,Number,Scope.Name,Description,Status.Name,Priority.Name,Owners.Name,Estimate',
-		Test : 'Name,Scope.Name,Description,Status.Name,Owners.Name,Estimate'
+		Test : 'Name,Scope.Name,Description,Status.Name,Owners.Name,Estimate',
+		Defect : 'Name,Scope.Name,Description,Status.Name,Owners.Name,Estimate'
 	}
 
-	//Story?sel=Name,Scope.Name,Description,Status.Name,Owners.Name,Estimate,Number&where=Number=%27S-01027%27
-
 	var prefix = 'http://walker.eastus.cloudapp.azure.com/VersionOne';
-	var url  = prefix + "/rest-1.v1/Data/" + assetType + '/' + assetId + '?sel=' + attributeSelector[assetType]
+	var url  = prefix + "/rest-1.v1/Data/" + assetType + '?sel=' + attributeSelector[assetType] + '&where=Number=%27' +  assetNumber + '%27'
 
 	return agent('GET', url)
 		.set('Accept', 'application/json')
@@ -133,12 +133,12 @@ function closeAsset(assetType, assetId){
 		.end();
 }
 
-function assetDetailsResponse(assetDetails, assetType){
+function assetDetailsResponse(assetDetails, assetType, assetNumber){
 	console.log('assetDetails', assetDetails)
-	var attr = assetDetails.Attributes;
+	var attr = assetDetails.Assets[0].Attributes;
 
 	var details = {
-		'number': attr.Number == undefined ? "" : attr.Number.value,
+		'number': assetNumber,
 		'name': attr.Name == undefined ? "" : attr.Name.value,
 		'description': attr.Description == undefined ? "" : attr.Description.value,
 		'owner': attr["Owners.Name"] == undefined ? "" : attr["Owners.Name"].value[0],
@@ -211,4 +211,15 @@ function assetTypeMapper(assetType){
 	}
 
 	return assetTypeMapper[assetType]
+}
+
+function createAssetNumber(assetType, assetNumber){
+	var assetPrefixMapper = {
+		Story : "S-",
+		Test : "T-",
+		Defect : "D-",
+		Teamroom : "T-"
+	}
+
+	return assetPrefixMapper[assetType] + assetNumber
 }
