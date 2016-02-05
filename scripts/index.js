@@ -34,7 +34,6 @@ function routeIntent(request){
 		assetType = request.intent.slots.Asset == undefined ? "" : request.intent.slots.Asset.value;
 	}
 
-
 	switch(intent) {
 		case "TellIntent":{
 			assetType = assetTypeMapper(assetType);
@@ -61,7 +60,7 @@ function routeIntent(request){
 
 			return createAsset(assetType,assetTitle, description,estimate)
 				.then(function(res){
-					sentence = createAssetResponse(res.statusCode, assetType, title);
+					sentence = createAssetResponse(res.statusCode, assetType, assetTitle);
 					return createEchoResponse(title, sentence, shouldEndSession);
 				}).catch(function(err){
 					console.log(err);
@@ -85,11 +84,10 @@ function routeIntent(request){
 			assetType = assetTypeMapper(assetType);
 			title = "Version One Updated a " + assetType;
 			var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
-			var assetNumber = createAssetNumber(assetType, assetId);
 
 			return updateAsset(assetType, assetId)
 				.then(function(res){
-					sentence = updateAssetResponse(res.statusCode, assetType, assetNumber);
+					sentence = updateAssetResponse(res.statusCode, assetType, assetId);
 					return createEchoResponse(title, sentence, shouldEndSession);
 				});
 		}
@@ -238,7 +236,7 @@ function updateAssetResponse(statusCode, assetType, assetNumber){
 }
 
 function createTeamroomResponse(){
-	return "Team Imperial Force has been very busy  . The next item in the backlog is CRM integration.  It has an average velocity of 9 and has planned 67 points for the next iteration.  Andre and Willy have been kicking ass.  "
+	return "Team Imperial Force has been very busy  . The next item in the backlog is CRM integration.  It has an average velocity of 9 and has planned 67 points for the next iteration.  Andre and Willy have been kicking    ass.  "
 }
 
 function createCompanyResponse(){
@@ -246,7 +244,7 @@ function createCompanyResponse(){
 }
 
 function createEchoResponse(title, sentence, shouldEndsession){
-	return response = {
+	return {
 		"version": "1.0",
 		"response": {
 			"outputSpeech": {
