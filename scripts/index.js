@@ -81,6 +81,19 @@ function routeIntent(request){
 				});
 		}
 		break;
+		case "UpdateIntent": {
+			assetType = assetTypeMapper(assetType);
+			title = "Version One Updated a " + assetType;
+			var assetId = request.intent.slots.AssetNumber.value == undefined ? "" :request.intent.slots.AssetNumber.value;
+			var assetNumber = createAssetNumber(assetType, assetId);
+
+			return updateAsset(assetType, assetId)
+				.then(function(res){
+					sentence = updateAssetResponse(res.statusCode, assetType, assetNumber);
+					return createEchoResponse(title, sentence, shouldEndSession);
+				});
+		}
+		break;
 		case "TeamroomIntent":{
 			title = "Version One teamroom details ";
 			sentence = createTeamroomResponse();
@@ -155,6 +168,25 @@ function closeAsset(assetType, assetId){
 		.end();
 }
 
+function updateAsset (assetType, assetId){
+	var body = createBodyForUpdate ()
+	var prefix = 'http://walker.eastus.cloudapp.azure.com/VersionOne';
+	var url  = prefix + '/rest-1.v1/Data/' + assetType + '/' + assetId
+
+	return agent('Post', url)
+		.set('Content-Type', 'application/xml')
+		.send(body)
+		.end();
+}
+
+function createBodyForUpdate(){
+	return '<Asset>' +
+		'<Relation name="Status" act="set">' +
+		'<Asset idref="StoryStatus:134" />' +
+		'</Relation>' +
+		'</Asset>'
+}
+
 function assetDetailsResponse(assetDetails, assetType, assetNumber){
 	console.log('assetDetails', assetDetails)
 	var attr = assetDetails.Assets[0].Attributes;
@@ -173,7 +205,7 @@ function assetDetailsResponse(assetDetails, assetType, assetNumber){
 	var sentence = 'This is a ' + assetType + " and is named " + details.name + "   .   ";
 	sentence += " It is owned by " + details.owner + "    .   ";
 	sentence += " and has an estimate of " + details.estimate + "   .  ";
-	sentence += " This " + assetType + "has a priority " + details.priority + " and has a status of " + details.status + "   .  ";
+	sentence += " This " + assetType + "has a priority " + details.priority + " and has a status of  " + details.status + "   .  ";
 	sentence += " It is being worked in the " + details.project + " project.  ";
 	return sentence;
 }
@@ -197,8 +229,16 @@ function closeAssetResponse(statusCode, assetType, assetId){
 	return 'We are sorry, closing the ' + assetType + '  was not successful  .   Please try again.'
 }
 
+function updateAssetResponse(statusCode, assetType, assetNumber){
+	if (statusCode == 200){
+		return  success =  'Success!!  Your have updated the ' + assetType + '    ' + assetNumber + '  with a status of  in progress. ';
+	}
+
+	return 'We are sorry, closing the ' + assetType + '  was not successful  .   Please try again.'
+}
+
 function createTeamroomResponse(){
-	return "Team Imperial Force has been very busy  .  It has an average velocity of 9 and has planned 52 points for the next iteration.  Andre and Willy have been kicking ass.  "
+	return "Team Imperial Force has been very busy  . The next item in the backlog is CRM integration.  It has an average velocity of 9 and has planned 67 points for the next iteration.  Andre and Willy have been kicking ass.  "
 }
 
 function createCompanyResponse(){

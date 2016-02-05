@@ -1,73 +1,89 @@
 {
-
   "intents": [
-
     {
-
-      "intent": "AnswerIntent",
-
+      "intent": "TellIntent",
       "slots": [
-
         {
-
-          "name": "Answer",
-
-          "type": "LIST_OF_ANSWERS"
-
+          "name": "Asset",
+          "type": "LIST_OF_ASSETS"
+        },
+        {
+          "name": "AssetNumber",
+          "type": "AMAZON.NUMBER"
         }
-
       ]
-
     },
-
     {
-
-      "intent": "AnswerOnlyIntent",
-
+      "intent": "CreateIntent",
+      "slots":[
+        {
+          "name": "Asset",
+          "type": "LIST_OF_ASSETS"
+        },
+        {
+          "name": "Title",
+          "type": "LIST_OF_TITLES"
+        },
+        {
+          "name": "Description",
+          "type": "LIST_OF_DESCRIPTIONS"
+        },
+        {
+          "name": "Estimate",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "CloseIntent",
       "slots": [
-
         {
-
-          "name": "Answer",
-
-          "type": "LIST_OF_ANSWERS"
-
+          "name": "Asset",
+          "type": "LIST_OF_ASSETS"
+        },
+        {
+          "name": "AssetNumber",
+          "type": "AMAZON.NUMBER"
         }
-
       ]
-
     },
-
     {
-
+      "intent": "UpdateIntent",
+      "slots": [
+        {
+          "name": "Asset",
+          "type": "LIST_OF_ASSETS"
+        },
+        {
+          "name": "AssetNumber",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "Status",
+          "type": "LIST_OF_STATUS"
+        }
+      ]
+    },
+    {
+      "intent": "TeamroomIntent"
+    },
+    {
+      "intent": "CompanyIntent"
+    },
+    {
       "intent": "AMAZON.StartOverIntent"
-
     },
-
     {
-
       "intent": "AMAZON.RepeatIntent"
-
     },
-
     {
-
       "intent": "AMAZON.HelpIntent"
-
     },
-
     {
-
       "intent": "AMAZON.StopIntent"
-
     },
-
     {
-
       "intent": "AMAZON.CancelIntent"
-
     }
-
   ]
-
 }
