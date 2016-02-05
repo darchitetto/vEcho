@@ -154,7 +154,7 @@ function createV1BodyForCreateAsset(assetType, title, description, estimate){
 						'<Asset href="/VersionOne/rest-1.v1/Data/Team/1116" idref="Team:1116" />' +
 					'</Relation>' +
 					'<Relation name="Scope" act="set">' +
-						'<Asset href="/VersionOne/rest-1.v1/Data/Scope/1100" idref="Scope:1100" />' +
+						'<Asset href="/VersionOne/rest-1.v1/Data/Scope/1100" idref="Scope:1102" />' +
 					'</Relation>' +
 				'</Asset>'
 }
